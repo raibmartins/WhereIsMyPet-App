@@ -5,7 +5,7 @@ import { Texto } from "../../components/Texto";
 
 export default function Login({ navigation }) {
     return (
-        <VStack flex='1' alignItems='center' justifyContent='center' p='10' mb={10}>
+        <VStack flex='1' alignItems='center' justifyContent='center' p='10' mb={10} backgroundColor='white'>
             <Logo mb="50"/>
             <Box >
                 <FormControl>

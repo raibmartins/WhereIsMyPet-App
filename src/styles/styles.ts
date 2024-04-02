@@ -19,16 +19,21 @@ export const TEMAS = extendTheme({
     }
 });
 
-export const stylesMap = StyleSheet.create({
+export const styles = StyleSheet.create({
     map: {
         flex: 1,
         width: '100%'
-    }
-});
-
-export const stylesLoading = StyleSheet.create({
-    map: {
+    },
+    loading: {
         flex: 1,
-        width: '100%'
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white'
+    },
+    petLineContainer: {
+        margin: 10,
+        height: 100,
+        borderRadius: 15,
+        borderWidth: 2
     }
 });

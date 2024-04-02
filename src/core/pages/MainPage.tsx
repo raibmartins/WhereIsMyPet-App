@@ -6,6 +6,7 @@ import { Texto } from '../../components/Texto';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Icon from '../../assets/default-icon.png';
 import Map from './map/Map';
+import Pets from './pets/Pets';
 
 const Drawer = createDrawerNavigator();
 
@@ -28,7 +29,7 @@ const tabs = [
     name: 'Pets',
     title: 'Pets',
     icon: <MaterialIcons name='pets' size={20} color='#64BC52'/>,
-    component: HomeScreen2
+    component: Pets
   },
   {
     id: 2,
@@ -46,7 +47,7 @@ function CustomDrawerContent(props) {
   }
   
   return (
-    <VStack flex={1}>
+    <VStack flex={1} >
 
       <Box w='100%' h='20%' flexDirection='row' justifyContent='center' borderColor='green.btn' borderTopWidth='1'>
         <Box flex='1' alignItems='center' justifyContent='center' flexDirection='row'>
