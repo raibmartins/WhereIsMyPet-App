@@ -8,12 +8,13 @@ import { Masks, formatWithMask } from "react-native-mask-input";
 
 export default function PetBox (props) {
     return (
-        <Swipeable renderLeftActions={() => leftSwipe(props?.data?.index, props?.removeAnimal)} containerStyle={styles.petLineContainer}>
+        <Swipeable renderLeftActions={() => leftSwipe({index: props?.data?.index, removeAnimal: props?.removeAnimal})} containerStyle={styles.petLineContainer}>
             <Box flexDirection='row'>
-                <VStack w='30%'  h='100%' backgroundColor={'gray.100'}>
-                    <Image w='80%' h='80%' margin='auto' source={props.data.item.icon} alt='Logo da unesc' borderRadius={60} borderWidth={2} borderColor={'black'}/>
+                <VStack w='30%'  h='100%' backgroundColor='gray.100'>
+                    <Image w='80%' h='80%' margin='auto' source={props.data.item.icon} alt='Logo da unesc' 
+                    borderRadius={60} borderWidth={2} borderColor={'black'}/>
                 </VStack>
-                <VStack w='70%' h={'100%'} display={'flex'} justifyContent={'center'} backgroundColor={'gray.100'}>
+                <VStack w='70%' h='100%' display='flex' justifyContent='center' backgroundColor='gray.100'>
                     <Texto fontSize={20}>
                         {props?.data?.item?.nome}
                     </Texto>
@@ -31,13 +32,16 @@ export default function PetBox (props) {
     );
 }
 
-const leftSwipe = (index, removeAnimal) => {
+interface LeftSwipeProps  {
+    index: Number,
+    removeAnimal: Function
+}
+
+const leftSwipe = ({index, removeAnimal} : LeftSwipeProps) => {
 
     return (
-        <VStack display='flex' justifyContent='center' alignItems='center' w='16%' backgroundColor={'red.100'}>
-            <TouchableOpacity onPress={() => removeAnimal(index)}>
-                <Ionicons name='trash' size={20} color='#FC7262'/>
-            </TouchableOpacity>
+        <VStack display='flex' justifyContent='center' alignItems='center' w='16%' backgroundColor='red.100' onTouchStart={() => removeAnimal(index)}>
+            <Ionicons name='trash' size={20} color='#FC7262'/>
         </VStack>
     )
 }

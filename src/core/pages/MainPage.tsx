@@ -49,7 +49,7 @@ function CustomDrawerContent(props) {
   return (
     <VStack flex={1} >
 
-      <Box w='100%' h='20%' flexDirection='row' justifyContent='center' borderColor='green.btn' borderTopWidth='1'>
+      <Box pt={10} w='100%' h='20%' flexDirection='row' justifyContent='center' borderColor='green.btn' borderTopWidth='1'>
         <Box flex='1' alignItems='center' justifyContent='center' flexDirection='row'>
           <Image width={100} height={100} source={Icon} alt='Logo da unesc'/>
         </Box>
