@@ -3,12 +3,17 @@ import { StyleSheet } from "react-native";
 
 export const TEMAS = extendTheme({
     colors:{
-        green: {
-            'btn': '#64BC52',
-            'txt': '#90d02c'
-        },
         white: '#fff',
         black: '#000',
+        green: {
+            sGreenUnesc: '#0ABF04',
+            wGreenUnesc: '#9FF222',
+            mGreenUnesc: '#26D90B',
+            swGreenUnesc: '#DCFFDC'
+        },
+        red: {
+            redUnesc: '#FF0033',   
+        }
     },
     fontSize: {
         xs: 12,
@@ -34,6 +39,7 @@ export const styles = StyleSheet.create({
         margin: 10,
         height: 100,
         borderRadius: 15,
-        borderWidth: 2
+        borderWidth: 2,
+        backgroundColor: '#e6eff8'
     }
 });

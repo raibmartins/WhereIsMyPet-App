@@ -84,6 +84,15 @@ const CustomCalloutView = () => (
             <Texto style={{ marginLeft: 'auto' }}>100% <Ionicons size={13} name="battery-half" /></Texto>
         </Box>
         <VStack flex={1} alignItems='center' justifyContent='center'>
+            <Texto>
+                Última localização
+            </Texto>
+            <Texto bold={false}>
+                11/04/2024
+            </Texto>
+            <Texto bold={false}>
+                22:24
+            </Texto>
         </VStack>
     </VStack>
 );

@@ -2,6 +2,7 @@ import { NativeBaseProvider, StatusBar } from 'native-base';
 import SystemPages from './src/core/System';
 import { useEffect } from 'react';
 import { LogBox } from 'react-native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import { TEMAS } from './src/styles/styles';
 
 export default function App() {
@@ -11,8 +12,10 @@ export default function App() {
   }, []);
 
   return ( 
-    <NativeBaseProvider theme={TEMAS}>
-      <SystemPages/>
-    </NativeBaseProvider>
+    <RootSiblingParent>
+      <NativeBaseProvider theme={TEMAS}>
+        <SystemPages/>
+      </NativeBaseProvider>
+    </RootSiblingParent>
   );
 }

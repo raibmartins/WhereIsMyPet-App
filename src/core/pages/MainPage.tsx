@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from '@react-navigation/drawer';
-import { Box, Image, Text, VStack } from 'native-base';
+import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator } from '@react-navigation/drawer';
+import { Box, Text, VStack } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { Texto } from '../../components/Texto';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import Icon from '../../assets/default-icon.png';
 import Map from './map/Map';
 import Pets from './pets/Pets';
+import { Logo } from '../../components/SystemLogo';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,7 +21,7 @@ const tabs = [
     id: 0,
     name: 'Mapa',
     title: 'Mapa',
-    icon: <Ionicons name='map-outline' size={20} color='#64BC52'/>,
+    icon: <Ionicons name='map' size={20} color='#64BC52'/>,
     component: Map
   },
   {
@@ -35,7 +35,7 @@ const tabs = [
     id: 2,
     name: 'Configurações',
     title: 'Configurações',
-    icon: <Ionicons name='settings-outline' size={20} color='#64BC52'/>,
+    icon: <Ionicons name='settings' size={20} color='#64BC52'/>,
     component: HomeScreen2
   }
 ]
@@ -51,7 +51,7 @@ function CustomDrawerContent(props) {
 
       <Box pt={10} w='100%' h='20%' flexDirection='row' justifyContent='center' borderColor='green.btn' borderTopWidth='1'>
         <Box flex='1' alignItems='center' justifyContent='center' flexDirection='row'>
-          <Image width={100} height={100} source={Icon} alt='Logo da unesc'/>
+          <Logo width={100} height={100} alt='Logo da unesc'/>
         </Box>
       </Box>
 

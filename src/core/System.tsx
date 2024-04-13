@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './auth/Login';
 import MainPage from './pages/MainPage';
+import Register from './auth/Register';
 
 const Tab = createNativeStackNavigator();
 
@@ -13,6 +14,11 @@ const tabs = [
     },
     {
         id: 1,
+        name:'Register',
+        component: Register
+    },
+    {
+        id: 2,
         name:'MainPage',
         component: MainPage
     }
@@ -31,7 +37,7 @@ export default function SystemPages() {
                             component={tab.component}
                             name={tab.name}
                             options={{headerShown: false}}
-                       />
+                    />
                     })
                 }
             </Tab.Navigator>

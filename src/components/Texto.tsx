@@ -7,7 +7,7 @@ interface TextoProps extends ITextProps {
 
 export function Texto({children, ...rest} : TextoProps )  {
     return (
-        <Text color='green.txt' bold={true} fontSize={13} {...rest}>
+        <Text color='green.sGreenUnesc' bold={true} fontSize={13} {...rest}>
             {children}
         </Text>
     );
