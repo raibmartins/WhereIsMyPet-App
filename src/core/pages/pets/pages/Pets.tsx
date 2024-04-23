@@ -2,16 +2,16 @@
 import { Button, FlatList, VStack } from "native-base";
 import { useState } from "react";
 import PetBox from "./PetBox";
-import Icon from '../../../assets/gatinho.jpg';
-import Icon2 from '../../../assets/gatinho2.jpg';
-import Toast from "react-native-root-toast";
+import Icon from '../../../../assets/gatinho.jpg';
+import Icon2 from '../../../../assets/gatinho2.jpg';
+import MyToast from "../../../../components/MyToast";
+import Loading from "../../../../components/Loading";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-export default function Pets() {
+export default function Pets({ navigation }) {
 
     const [refresh, setRefresh] = useState(false);
     const [pets, setPets] = useState([]);
-    const [toast, setToast] = useState(null);
-
 
     function addAnimal() {
         let newPets = pets;
@@ -37,26 +37,7 @@ export default function Pets() {
     function checkAnimal(index) {
         pets[index].rastreando = !pets[index].rastreando;
 
-        if (toast != null) {
-            Toast.hide(toast);
-        }
-
-        let newToast = Toast.show(`Você ${pets[index].rastreando ? 'começou a' : 'parou de'} rastrear seu animal`, {
-            duration: Toast.durations.LONG,
-            backgroundColor: '#90d02c',
-            textColor: 'black',
-            containerStyle: {
-                height: 60,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 10,
-                borderColor: 'black',
-                borderWidth: 1
-            }
-        });
-
-        setToast(newToast);
+        MyToast.info(`Você ${pets[index].rastreando ? 'começou a' : 'parou de'} rastrear seu animal`);
 
         changeRefresh();
     }
@@ -66,10 +47,11 @@ export default function Pets() {
     }
 
     return (
+        
         <VStack backgroundColor='white' h='100%'>
 
             <VStack flexDirection='row' justifyContent='center' w={'100%'} pt={5} pb={5}>
-                <Button onPress={addAnimal} backgroundColor='green.btn' w='30%'>Adicionar</Button>
+                <Button onPress={addAnimal} backgroundColor='green.sGreenUnesc' w='30%'>Adicionar</Button>
             </VStack>
 
             <FlatList  data={pets}

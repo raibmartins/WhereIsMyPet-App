@@ -7,6 +7,9 @@ import { Texto } from "../../components/Texto";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
+import { useEffect } from "react";
+import api from "../../components/Api";
+import MyToast from "../../components/MyToast";
 
 const registerSchema = yup.object({
     nome: yup
@@ -28,48 +31,57 @@ const registerSchema = yup.object({
 
 export default function Register({ navigation }) {
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema)
     });
 
-    function handleRegister(data: FormProps) {
-        console.log(data);
+    async function handleRegister(data: FormProps) {
+        const response = await api.postNoAuth('auth/register', data);
+        if (response != null) {
+            reset();
+            MyToast.success('Você se cadastrou com sucesso!');
+            navigation.goBack();
+        }
     }
+
+    useEffect(() => {
+        reset();
+    }, []);
 
     return (
         <>
-            <Box w='100%' flexDirection='row' pl={5} pt='10' backgroundColor='white'>
-                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                    <MaterialIcons name='arrow-back' size={30} color='#64BC52' />
-                </TouchableOpacity>
-            </Box>
-            <KeyboardAvoidingView behavior="padding" pt={10} pb='10' pl={10} pr={10} backgroundColor='white'>
+            <KeyboardAvoidingView h='100%' behavior="padding" pt={10} pb='10' pl={10} pr={10} backgroundColor='white'>
                 <Center>
+                    <Box w='100%' flexDirection='row'>
+                        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                            <MaterialIcons name='arrow-back' size={30} color='#64BC52' />
+                        </TouchableOpacity>
+                    </Box>
                     <Logo mb="50" />
                     <Box>
                         <Controller
                             control={control}
                             name="nome"
-                            render={({ field: { onChange } }) => (
-                                <Input label="Nome" onChangeText={onChange} errorMessage={errors.nome?.message} />
+                            render={({ field: { value, onChange } }) => (
+                                <Input label="Nome" value={value} onChangeText={onChange} errorMessage={errors.nome?.message} />
                             )} />
                         <Controller
                             control={control}
                             name="email"
-                            render={({ field: { onChange } }) => (
-                                <Input label="E-mail" onChangeText={onChange} errorMessage={errors.email?.message} />
+                            render={({ field: { value, onChange } }) => (
+                                <Input label="E-mail" value={value} onChangeText={onChange} errorMessage={errors.email?.message} />
                             )} />
                         <Controller
                             control={control}
                             name="senha"
-                            render={({ field: { onChange } }) => (
-                                <Input label="Senha" secureTextEntry onChangeText={onChange} errorMessage={errors.senha?.message} />
+                            render={({ field: { value, onChange } }) => (
+                                <Input label="Senha" value={value} secureTextEntry onChangeText={onChange} errorMessage={errors.senha?.message} />
                             )} />
                         <Controller
                             control={control}
                             name="senha_confirm"
-                            render={({ field: { onChange } }) => (
-                                <Input label="Repita sua senha" secureTextEntry onChangeText={onChange} errorMessage={errors.senha_confirm?.message} />
+                            render={({ field: { value, onChange } }) => (
+                                <Input label="Repita sua senha" value={value} secureTextEntry onChangeText={onChange} errorMessage={errors.senha_confirm?.message} />
                             )} />
                     </Box>
                     <Button w='100%'

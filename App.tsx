@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { LogBox } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { TEMAS } from './src/styles/styles';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
 
@@ -15,6 +16,7 @@ export default function App() {
     <RootSiblingParent>
       <NativeBaseProvider theme={TEMAS}>
         <SystemPages/>
+        <Toast />
       </NativeBaseProvider>
     </RootSiblingParent>
   );

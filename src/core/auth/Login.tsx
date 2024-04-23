@@ -6,7 +6,12 @@ import { Input } from "../../components/Input";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
+import api from "../../components/Api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react";
+import MyToast from "../../components/MyToast";
+
+
 
 const loginSchema = yup.object({
     email: yup
@@ -21,13 +26,26 @@ const loginSchema = yup.object({
 
 export default function Login({ navigation }) {
 
-    const { control, resetField, handleSubmit, formState: { errors } } = useForm({
+    const { control, reset, handleSubmit, formState: { errors} } = useForm({
         resolver: yupResolver(loginSchema)
     });
 
-    function handleRegister(data: FormProps) {
+    async function handleLogin(data: FormProps) {
+        api.postNoAuth('auth/login', data).then(response => {
+            if (response != null) {
+                AsyncStorage.setItem('auth', response.token);
+                AsyncStorage.setItem('user', JSON.stringify(response.usuario));
+                MyToast.success(`Seja bem vindo(a) ${response.usuario.nome}!`)
+                reset();
+                navigation.navigate('MainPage');
+            }
+        });
     }
-    
+
+    useEffect(() => {
+        reset();
+    }, []);
+
     return (
         <KeyboardAvoidingView behavior="padding" flex='1' alignItems='center' justifyContent='center' p='10' backgroundColor='white' pb={10}>
             <Logo mb="50" />
@@ -35,17 +53,17 @@ export default function Login({ navigation }) {
                 <Controller
                     control={control}
                     name="email"
-                    render={({ field: { onChange } }) => (
-                        <Input label="E-mail" onChangeText={onChange} errorMessage={errors.email?.message} />
+                    render={({ field: { value, onChange } }) => (
+                        <Input label="E-mail" value={value}  onChangeText={onChange} errorMessage={errors.email?.message} />
                     )} />
                 <Controller
                     control={control}
                     name="senha"
-                    render={({ field: { onChange } }) => (
-                        <Input label="Senha" secureTextEntry onChangeText={onChange} errorMessage={errors.senha?.message} />
+                    render={({ field: { value, onChange } }) => (
+                        <Input label="Senha" value={value} secureTextEntry onChangeText={onChange} errorMessage={errors.senha?.message} />
                     )} />
             </Box>
-            <Button w='100%' bg='green.sGreenUnesc' mt='10' borderRadius='lg' shadow='3' onPress={handleSubmit(handleRegister)}>
+            <Button w='100%' bg='green.sGreenUnesc' mt='10' borderRadius='lg' shadow='3' onPress={handleSubmit(handleLogin)}>
                 <Texto color='white'>Entrar</Texto>
             </Button>
             <Box w='100%' flexDirection='row' justifyContent='center' mt='5'>

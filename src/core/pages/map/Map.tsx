@@ -1,20 +1,31 @@
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Callout, Marker } from "react-native-maps";
 import { styles } from "../../../styles/styles";
 import { useEffect, useState } from "react";
 import { requestForegroundPermissionsAsync } from "expo-location";
 import Loading from "../../../components/Loading";
-import Icone from '../../../assets/default-icon.png'
-import { Dimensions } from "react-native";
-import { Badge, Box, Text, VStack } from "native-base";
+import { Box, VStack } from "native-base";
 import { Texto } from "../../../components/Texto";
 
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 
 export default function Map() {
 
     const [loaded, setLoaded] = useState(false);
     const [markers, setMarkers] = useState([]);
+
+    const isFocused = useIsFocused();
+
+    useFocusEffect(() => {
+        if (isFocused) {
+            setTimeout(() => {
+                setLoaded(true)
+            }, 2000)
+        } else {
+            setLoaded(false)
+        }
+    });
 
     function _addMarker(marker): void {
         const newMarker = markers;
@@ -31,26 +42,8 @@ export default function Map() {
     const LATITUD_DELTA = 0.015;
     const LONGITUDE_DELTA = LATITUD_DELTA / 4;
 
-    async function requestPermission() {
-        const { granted } = await requestForegroundPermissionsAsync();
-
-        if (granted) {
-            loadPostions();
-        }
-    }
-
-    function loadPostions() {
-        setTimeout(() => {
-            setLoaded(true);
-        }, 3000)
-    }
-
-    useEffect(() => {
-        requestPermission();
-    }, []);
-
     return (
-        <Loading loaded={loaded}>
+        <Loading description="Carregando informações" loaded={loaded} map={true}>
             <MapView
                 style={styles.map}
                 provider="google"

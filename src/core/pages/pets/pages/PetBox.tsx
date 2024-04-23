@@ -1,9 +1,8 @@
 import { Box, Checkbox, Image, Text, VStack } from "native-base";
 import { Swipeable } from "react-native-gesture-handler";
-import { TouchableOpacity } from "react-native";
-import { styles } from "../../../styles/styles";
+import { styles } from "../../../../styles/styles";
 import { Ionicons } from '@expo/vector-icons';
-import { Texto } from "../../../components/Texto";
+import { Texto } from "../../../../components/Texto";
 import { Masks, formatWithMask } from "react-native-mask-input";
 
 export default function PetBox (props) {
