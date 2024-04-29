@@ -12,8 +12,12 @@ export default function PetBox (props) {
             containerStyle={styles.petLineContainer}>
             <Box flexDirection='row'>
                 <VStack w='30%'  h='100%' backgroundColor='#e6eff8'>
-                    <Image w='80%' h='80%' margin='auto' source={props.data.item.icon} alt='Logo da unesc' 
-                    borderRadius={60} borderWidth={2} borderColor={'black'}/>
+                    <Image w='80%' h='80%' 
+                    margin='auto' 
+                    source={{uri: `data:image/jpeg;base64,${props.data.item.imagem}`}} 
+                    alt='Logo da unesc' 
+                    borderRadius={60} 
+                    borderWidth={2} borderColor={'black'}/>
                 </VStack>
                 <VStack w='60%' h='100%' display='flex' justifyContent='center' backgroundColor='#e6eff8'>
                     <Texto fontSize={20}>
@@ -22,19 +26,14 @@ export default function PetBox (props) {
                     <Texto fontSize={16} bold={false}>
                     {
                         formatWithMask({
-                            text: props.data.item.numero,
+                            text: props.data.item.telefone,
                             mask: Masks.BRL_PHONE,
                         }).masked
                     }
                     </Texto>
                 </VStack>
                 <VStack w='30%'  h='100%' backgroundColor='#e6eff8' flex={1} justifyContent={'center'}>
-                    <Checkbox value="true" 
-                        colorScheme={'green'} 
-                        aria-label="#" 
-                        isChecked={props.data.item.rastreando == true} 
-                        onTouchStart={() => props?.checkAnimal(props?.data?.index)}>
-                    </Checkbox>
+                    
                 </VStack>
             </Box>
         </Swipeable>

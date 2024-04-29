@@ -19,6 +19,9 @@ class MyToastClass {
         Toast.show({
             type: type,
             text1: message,
+            props: {
+                text1NumberOfLines: 4,
+            },
             topOffset: 80,
             visibilityTime: 4000,
             text1Style: {

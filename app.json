@@ -30,7 +30,13 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Permita o acesso a sua localização."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permita o aplicativo acessar suas fotos."
         }
       ]
     ]

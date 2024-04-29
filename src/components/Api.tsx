@@ -1,8 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
 import MyToast from "./MyToast";
 
-export const PATH_URL = 'http://192.168.0.9:8080/';
+// export conpnpnst PATH_URL = 'http://192.168.0.9:8080/';
 
 class API {
 
@@ -15,7 +14,7 @@ class API {
         return this.post(path, body, null);
     }
 
-    public post(path, body, auth) {
+    private post(path, body, auth) {
         let headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -23,11 +22,34 @@ class API {
         if (auth != null) {
             headers['Authorization'] = 'Bearer ' + auth
         }
-
-        return fetch(PATH_URL + path, {
+console.log(process.env.PATH_URL + path)
+        return fetch(process.env.PATH_URL + path, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(body)
+        }).then(response => {
+            console.log(response)
+            if (!response.ok) {
+                this.showError(response);
+                return null;
+            }
+            return response.json();
+        }).catch(err => {
+            console.log(err)
+            return null;
+        });
+    }
+
+    public async get(path) {
+        const auth = await AsyncStorage.getItem('auth');
+
+        return fetch(process.env.PATH_URL + path, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + auth
+            }
         }).then(response => {
             if (!response.ok) {
                 this.showError(response);
