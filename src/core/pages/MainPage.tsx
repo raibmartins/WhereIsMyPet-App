@@ -72,7 +72,6 @@ export default function MainPage({ navigation }) {
 
   React.useEffect(() => {
       AsyncStorage.getItem('user').then(response => {
-          console.log(response);
           setUser(JSON.parse(response));
       });
   }, []);

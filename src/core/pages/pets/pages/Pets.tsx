@@ -5,13 +5,15 @@ import PetBox from "./PetBox";
 import Loading from "../../../../components/Loading";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import api from "../../../../components/Api";
+import MyToast from "../../../../components/MyToast";
 
-export default function Pets({ navigation }) {
+export default function Pets({ navigation, route }) {
 
     const [pets, setPets] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const [petsLoaded, setPetsLoaded] = useState(false);
     const [loaded, setLoaded] = useState(false);
+    
     const isFocused = useIsFocused();
 
     useFocusEffect(() => {
@@ -20,6 +22,7 @@ export default function Pets({ navigation }) {
                 loadAnimais();
             }
         } else {
+            setPetsLoaded(false);
             setPets([]);
         }
     });
@@ -29,42 +32,24 @@ export default function Pets({ navigation }) {
             setPetsLoaded(true);
             setLoaded(true);
             setPets(response);
-            console.log(response)
         })
     }
 
     function addAnimal() {
-        navigation.navigate('petsRegister')
-      /*   let newPets = pets;
-        let petId = newPets.length === 0 ? 1 : newPets[newPets.length - 1].id + 1;
-        newPets.push(
-            {
-                id: petId,
-                nome: 'Gatin',
-                numero: '4899999999',
-                icon: petId % 2 === 0 ? Icon : Icon2,
-                rastreando: true
-            }
-        );
-        setPets(newPets);
-        changeRefresh();*/
+        navigation.navigate('petsRegister');
     }
     
     function removeAnimal(index) {
-     /*   pets.splice(index, 1);
-        changeRefresh();*/
-    }
-
-    function checkAnimal(index) {
-    /*    pets[index].rastreando = !pets[index].rastreando;
-
-        MyToast.info(`Você ${pets[index].rastreando ? 'começou a' : 'parou de'} rastrear seu animal`);
-
-        changeRefresh();*/
+        setLoaded(false);
+        api.putAuth(`pets/excluir/${pets[index].id}`).then(() => {
+            pets.splice(index, 1);
+            setLoaded(true);
+            changeRefresh();
+        });
     }
 
     function changeRefresh() {
-  //      setRefresh(!refresh);
+        setRefresh(!refresh);
     }
 
     return (
@@ -76,7 +61,7 @@ export default function Pets({ navigation }) {
                 <FlatList  data={pets}
                     extraData={refresh}
                     renderItem={(item) => {
-                        return <PetBox data={item} removeAnimal={removeAnimal} checkAnimal={checkAnimal}/>
+                        return <PetBox data={item} removeAnimal={removeAnimal} />
                     }}
                 />
             </VStack>

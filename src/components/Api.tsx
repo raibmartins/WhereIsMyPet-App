@@ -14,6 +14,34 @@ class API {
         return this.post(path, body, null);
     }
 
+    public async putAuth(path) {
+        const auth = await AsyncStorage.getItem('auth');
+        return this.put(path, auth)
+    }
+
+    private put(path, auth) {
+        let headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+        if (auth != null) {
+            headers['Authorization'] = 'Bearer ' + auth
+        }
+        
+        return fetch(process.env.PATH_URL + path, {
+            method: 'PUT',
+            headers: headers
+        }).then(response => {
+            if (!response.ok) {
+                this.showError(response);
+                return null;
+            }
+            return response.json();
+        }).catch(err => {
+            return null;
+        });
+    }
+
     private post(path, body, auth) {
         let headers = {
             'Accept': 'application/json',
@@ -22,20 +50,18 @@ class API {
         if (auth != null) {
             headers['Authorization'] = 'Bearer ' + auth
         }
-console.log(process.env.PATH_URL + path)
+
         return fetch(process.env.PATH_URL + path, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(body)
         }).then(response => {
-            console.log(response)
             if (!response.ok) {
                 this.showError(response);
                 return null;
             }
             return response.json();
         }).catch(err => {
-            console.log(err)
             return null;
         });
     }

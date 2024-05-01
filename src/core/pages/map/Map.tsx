@@ -1,9 +1,9 @@
 import MapView, { Callout, Marker } from "react-native-maps";
 import { styles } from "../../../styles/styles";
 import { useEffect, useState } from "react";
-import { requestForegroundPermissionsAsync } from "expo-location";
+import * as Location from 'expo-location';
 import Loading from "../../../components/Loading";
-import { Box, VStack } from "native-base";
+import { Box, ScrollView, VStack, View } from "native-base";
 import { Texto } from "../../../components/Texto";
 
 import { Ionicons } from '@expo/vector-icons';
@@ -17,16 +17,18 @@ export default function Map() {
     const [loaded, setLoaded] = useState(false);
     const [markers, setMarkers] = useState([]);
     const [locationsLoaded, setLocationsLoaded] = useState(false);
+    const [region, setRegion] = useState(null);
     const isFocused = useIsFocused();
                 
     useFocusEffect(() => {
         if (isFocused) {
             if (!locationsLoaded) {
-                _loadMarkers();   
+                _loadMarkers();
             }
         } else {
             setMarkers([]);
-            setLoaded(false)
+            setRegion(null);
+            setLoaded(false);
             setLocationsLoaded(false);
         }
     });
@@ -34,16 +36,45 @@ export default function Map() {
     function _loadMarkers() {
         setLocationsLoaded(true);
         setMarkers([]);
+        setRegion(null);
         api.get('petsLocation').then(locations => {
+            console.log('locations')
+            console.log(locations)
             if (locations != null) {
-                locations.forEach(_addMarker);
+                locations.forEach((item, index) => {
+                    if (index === 0) {
+                        setRegion({
+                            latitude: parseFloat(item.latitude),
+                            longitude: parseFloat(item.longitude),
+                            latitudeDelta: LATITUD_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                        });
+                    }
+                    _addMarker(item);
+                });
             }
-            setLoaded(true)
-        })
+            if (region == null) {
+                Location.requestBackgroundPermissionsAsync().then(response => {
+                    if (response.status === 'granted') {
+                        Location.getCurrentPositionAsync().then(location => {
+                            console.log(location)
+                            setRegion({
+                                latitude: location.coords.latitude,
+                                longitude: location.coords.longitude,
+                                latitudeDelta: LATITUD_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA
+                            });
+                            setLoaded(true);
+                        })
+                    } else {
+                        setLoaded(true);
+                    }
+                }).catch(err => {console.log(err)});
+            }
+        });
     }
 
     function _addMarker(marker : MarkerProps): void {
-        console.log(markers)
         const newMarker = markers;
         newMarker.push(marker);
         setMarkers(newMarker);
@@ -60,18 +91,12 @@ export default function Map() {
                 zoomEnabled={true}
                 scrollEnabled={true}
                 showsUserLocation={true}
-                region={{
-                    latitude: markers[0] != null ? parseFloat(markers[0].latitude) : null,
-                    longitude: markers[0] != null ? parseFloat(markers[0].longitude) : null,
-                    latitudeDelta: LATITUD_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA
-                }}
+                region={region}
             >
                 {
                     markers[0] != null && markers.map((marker, index) => {
-                        console.log(marker)
                         return <Marker
-                                key={index}
+                                key={marker.id}
                                 coordinate={{
                                     latitude: parseFloat(marker.latitude),
                                     longitude: parseFloat(marker.longitude)
