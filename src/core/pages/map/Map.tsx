@@ -1,4 +1,4 @@
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView, { Callout, Marker, Region } from "react-native-maps";
 import { styles } from "../../../styles/styles";
 import { useEffect, useState } from "react";
 import * as Location from 'expo-location';
@@ -10,9 +10,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import api from "../../../components/Api";
 import moment from "moment";
+import React from "react";
 
 
 export default function Map() {
+
+    const LATITUD_DELTA = 0.015;
+    const LONGITUDE_DELTA = LATITUD_DELTA / 4;
 
     const [loaded, setLoaded] = useState(false);
     const [markers, setMarkers] = useState([]);
@@ -23,7 +27,7 @@ export default function Map() {
     useFocusEffect(() => {
         if (isFocused) {
             if (!locationsLoaded) {
-                _loadMarkers();
+                loadMarkers();
             }
         } else {
             setMarkers([]);
@@ -33,43 +37,32 @@ export default function Map() {
         }
     });
 
-    function _loadMarkers() {
+    function loadMarkers() {
         setLocationsLoaded(true);
         setMarkers([]);
         setRegion(null);
-        api.get('petsLocation').then(locations => {
-            console.log('locations')
-            console.log(locations)
+        api.get('petsLocation').then((locations: Locations[]) => {
+            let newRegion : Region = null;
+
             if (locations != null) {
-                locations.forEach((item, index) => {
-                    if (index === 0) {
-                        setRegion({
+                locations.map((item, index) => {
+                    if (index == 0) {
+                        newRegion = {
                             latitude: parseFloat(item.latitude),
                             longitude: parseFloat(item.longitude),
                             latitudeDelta: LATITUD_DELTA,
                             longitudeDelta: LONGITUDE_DELTA
-                        });
+                        }
                     }
                     _addMarker(item);
                 });
+                setRegion(newRegion)
             }
-            if (region == null) {
-                Location.requestBackgroundPermissionsAsync().then(response => {
-                    if (response.status === 'granted') {
-                        Location.getCurrentPositionAsync().then(location => {
-                            console.log(location)
-                            setRegion({
-                                latitude: location.coords.latitude,
-                                longitude: location.coords.longitude,
-                                latitudeDelta: LATITUD_DELTA,
-                                longitudeDelta: LONGITUDE_DELTA
-                            });
-                            setLoaded(true);
-                        })
-                    } else {
-                        setLoaded(true);
-                    }
-                }).catch(err => {console.log(err)});
+            
+            if (newRegion == null) {
+                createDefaultRegion();
+            } else {
+                setLoaded(true);
             }
         });
     }
@@ -80,8 +73,23 @@ export default function Map() {
         setMarkers(newMarker);
     }
 
-    const LATITUD_DELTA = 0.015;
-    const LONGITUDE_DELTA = LATITUD_DELTA / 4;
+    function createDefaultRegion() {
+        Location.requestBackgroundPermissionsAsync().then(response => {
+            if (response.status === 'granted') {
+                Location.getCurrentPositionAsync().then(location => {
+                    setRegion({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                        latitudeDelta: LATITUD_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    });
+                    setLoaded(true);
+                })
+            } else {
+                setLoaded(true);
+            }
+        });
+    }
 
     return (
         <Loading description="Carregando informações" loaded={loaded} map={true}>
@@ -131,16 +139,3 @@ const CustomCalloutView = ({marker}) => (
     </VStack>
 );
 
-type MarkerProps = {
-    id: Number,
-    latitude: String,
-    longitude: String,
-    bateria: String,
-    dataHoraPosicao: String,
-    pet: PetMarkerProps
-}
-
-type PetMarkerProps = {
-    id : Number,
-    nome : String
-}

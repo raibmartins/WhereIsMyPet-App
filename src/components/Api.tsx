@@ -1,8 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyToast from "./MyToast";
 
-// export conpnpnst PATH_URL = 'http://192.168.0.9:8080/';
-
 class API {
 
     public async postAuth(path, body) {

@@ -5,7 +5,7 @@ import PetBox from "./PetBox";
 import Loading from "../../../../components/Loading";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import api from "../../../../components/Api";
-import MyToast from "../../../../components/MyToast";
+import React from "react";
 
 export default function Pets({ navigation, route }) {
 

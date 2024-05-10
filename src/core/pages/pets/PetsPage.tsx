@@ -2,6 +2,7 @@ import { NavigationContainer, useFocusEffect, useIsFocused } from "@react-naviga
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Pets from "./pages/Pets";
 import PetRegister from "./pages/PetRegister";
+import React, { useEffect } from "react";
 
 const Tab = createNativeStackNavigator();
 
@@ -20,7 +21,16 @@ const tabs = [
 
 export default function PetsPage() {
 
+    const isFocused = useIsFocused();
+
+    useFocusEffect(() => {
+        if (isFocused) {
+
+        }
+    });
+
     return (
+        isFocused ? 
         <NavigationContainer independent={true}>
             <Tab.Navigator>
                 {
@@ -34,6 +44,8 @@ export default function PetsPage() {
                     })
                 }
             </Tab.Navigator>
-        </NavigationContainer>
+        </NavigationContainer> 
+        : 
+        <></>
     )
 }

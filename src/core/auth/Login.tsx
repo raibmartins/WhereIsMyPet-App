@@ -26,7 +26,7 @@ const loginSchema = yup.object({
 
 export default function Login({ navigation }) {
 
-    const { control, reset, handleSubmit, formState: { errors} } = useForm({
+    const { control, reset, handleSubmit, setValue, formState: { errors} } = useForm({
         resolver: yupResolver(loginSchema)
     });
 
@@ -44,7 +44,16 @@ export default function Login({ navigation }) {
 
     useEffect(() => {
         reset();
+        loadEmail(); 
     }, []);
+
+    async function loadEmail() {
+        let user = await AsyncStorage.getItem('user');
+        if (user != null) {
+            let userProps : FormProps = JSON.parse(user);
+            setValue('email', userProps.email);
+        }
+    }
 
     return (
         <KeyboardAvoidingView behavior="padding" flex='1' alignItems='center' justifyContent='center' p='10' backgroundColor='white' pb={10}>

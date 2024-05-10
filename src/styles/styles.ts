@@ -36,10 +36,7 @@ export const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     petLineContainer: {
-        margin: 10,
-        height: 100,
-        borderRadius: 15,
-        borderWidth: 2,
-        backgroundColor: '#e6eff8'
+        height: 110,
+        borderBottomWidth: 2
     }
 });
