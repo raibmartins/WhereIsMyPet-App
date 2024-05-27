@@ -1,16 +1,16 @@
-import MapView, { Callout, Marker, Region } from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { styles } from "../../../styles/styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as Location from 'expo-location';
 import Loading from "../../../components/Loading";
-import { Box, ScrollView, VStack, View } from "native-base";
+import { Box, Button, VStack } from "native-base";
 import { Texto } from "../../../components/Texto";
-
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import api from "../../../components/Api";
 import moment from "moment";
 import React from "react";
+import { Platform } from "react-native";
 
 
 export default function Map() {
@@ -23,7 +23,7 @@ export default function Map() {
     const [locationsLoaded, setLocationsLoaded] = useState(false);
     const [region, setRegion] = useState(null);
     const isFocused = useIsFocused();
-                
+
     useFocusEffect(() => {
         if (isFocused) {
             if (!locationsLoaded) {
@@ -42,7 +42,7 @@ export default function Map() {
         setMarkers([]);
         setRegion(null);
         api.get('petsLocation').then((locations: Locations[]) => {
-            let newRegion : Region = null;
+            let newRegion: Region = null;
 
             if (locations != null) {
                 locations.map((item, index) => {
@@ -58,7 +58,7 @@ export default function Map() {
                 });
                 setRegion(newRegion)
             }
-            
+
             if (newRegion == null) {
                 createDefaultRegion();
             } else {
@@ -67,14 +67,14 @@ export default function Map() {
         });
     }
 
-    function _addMarker(marker : MarkerProps): void {
+    function _addMarker(marker: MarkerProps): void {
         const newMarker = markers;
         newMarker.push(marker);
         setMarkers(newMarker);
     }
 
     function createDefaultRegion() {
-        Location.requestBackgroundPermissionsAsync().then(response => {
+        Location.requestForegroundPermissionsAsync().then(response => {
             if (response.status === 'granted') {
                 Location.getCurrentPositionAsync().then(location => {
                     setRegion({
@@ -93,34 +93,42 @@ export default function Map() {
 
     return (
         <Loading description="Carregando informações" loaded={loaded} map={true}>
-            <MapView
-                style={styles.map}
-                provider="google"
-                zoomEnabled={true}
-                scrollEnabled={true}
-                showsUserLocation={true}
-                region={region}
-            >
-                {
-                    markers[0] != null && markers.map((marker, index) => {
-                        return <Marker
+            <VStack style={{ flex: 1 }}>
+                <MapView
+                    style={styles.map}
+                    provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+                    zoomEnabled={true}
+                    scrollEnabled={true}
+                    showsUserLocation={true}
+                    region={region}
+                >
+                    {
+                        markers[0] != null && markers.map((marker, index) => {
+                            return <Marker
                                 key={marker.id}
                                 coordinate={{
                                     latitude: parseFloat(marker.latitude),
                                     longitude: parseFloat(marker.longitude)
                                 }} >
                                 <Callout tooltip={true}>
-                                    <CustomCalloutView marker={marker}/>
+                                    <CustomCalloutView marker={marker} />
                                 </Callout>
                             </Marker>
-                    })
-                }
-            </MapView>
+                        })
+                    }
+                </MapView>
+                <Button bg='green.sGreenUnesc' borderRadius='lg' margin={5} shadow='3' style={{
+                    position: 'absolute',
+                    alignSelf: 'flex-start'
+                }} onPress={() => {setLoaded(false);loadMarkers();}}>
+                    <Ionicons name='reload' size={25} color={'white'}/>
+                </Button>
+            </VStack>
         </Loading>
     )
 }
 
-const CustomCalloutView = ({marker}) => (
+const CustomCalloutView = ({ marker }) => (
     <VStack padding={2} mb={2} w={150} h={150} style={{ backgroundColor: '#f5f3f1', borderRadius: 20, borderWidth: 1, borderColor: '#64BC52' }}>
         <Box w='100%' style={{ display: 'flex', alignItems: 'center' }}>
             <Texto style={{ marginLeft: 'auto' }}>{marker.bateria} <Ionicons size={13} name="battery-half" /></Texto>
@@ -133,7 +141,7 @@ const CustomCalloutView = ({marker}) => (
                 {moment(marker.dataHoraPosicao).format('DD/MM/YYYY')}
             </Texto>
             <Texto bold={false}>
-            {moment(marker.dataHoraPosicao).format('HH:mm')}
+                {moment(marker.dataHoraPosicao).format('HH:mm')}
             </Texto>
         </VStack>
     </VStack>
