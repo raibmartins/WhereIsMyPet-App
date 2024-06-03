@@ -15,7 +15,7 @@ Este projeto é um aplicativo mobile para rastreamento de animais, desenvolvido 
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/raibmartins/WhereIsMyPet-App
    cd seu-repositorio
    ```
 2. **Instale as dependências:**
