@@ -54,8 +54,8 @@ export default function Map() {
                             longitudeDelta: LONGITUDE_DELTA
                         }
                     }
-                    _addMarker(item);
                 });
+                setMarkers(locations);
                 setRegion(newRegion)
             }
 
@@ -65,12 +65,6 @@ export default function Map() {
                 setLoaded(true);
             }
         });
-    }
-
-    function _addMarker(marker: MarkerProps): void {
-        const newMarker = markers;
-        newMarker.push(marker);
-        setMarkers(newMarker);
     }
 
     function createDefaultRegion() {
@@ -103,7 +97,7 @@ export default function Map() {
                     region={region}
                 >
                     {
-                        markers[0] != null && markers.map((marker, index) => {
+                        markers[0] != null && markers.map((marker) => {
                             return <Marker
                                 key={marker.id}
                                 coordinate={{
@@ -120,8 +114,11 @@ export default function Map() {
                 <Button bg='green.sGreenUnesc' borderRadius='lg' margin={5} shadow='3' style={{
                     position: 'absolute',
                     alignSelf: 'flex-start'
-                }} onPress={() => {setLoaded(false);loadMarkers();}}>
-                    <Ionicons name='reload' size={25} color={'white'}/>
+                }} onPress={() => { 
+                        setLoaded(false);
+                        loadMarkers(); 
+                    }}>
+                    <Ionicons name='reload' size={25} color={'white'} />
                 </Button>
             </VStack>
         </Loading>
